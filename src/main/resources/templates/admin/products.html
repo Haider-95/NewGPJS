@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" 
+xmlns:th="http://www.thymeleaf.org" 
+th:replace="~{fragments/layouttemplate :: layout (~{::body})}">
+    <head>
+    <meta charset="UTF-8"/>
+    <title>replace</title>
+</head>
+<body>
+<div class="container">
+    <h1>Products</h1>
+    <table class="table">
+        <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Price</th>
+              <th scope="col">Stock level</th>
+              <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="product : ${products}">
+                <td th:text="${product.getName()}"></td>
+                <td th:text="${product.getPrice()}"></td>
+                <td th:text="${product.getStockLevel()}"></td>
+                <td>
+                    <a th:href="@{/admin/product/edit(id=${product.getId()})}">Edit</a>
+                </td>
+            </tr>
+        </tbody>        
+    </table>
+    <a href="#" class="btn btn-primary btn-lg " role="button">Add new</a>
+</div>
+
+
+
+</body>
+</html>
