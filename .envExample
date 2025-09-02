@@ -1,7 +1,7 @@
 # DATABASE CONFIG
-DB_URL=jdbc:mysql://localhost:3306/(your database name)
-DB_USERNAME=root
-DB_PASSWORD=yourpassword
+DATASOURCE_URL=dbc:mysql://localhost:3306/(your database name)
+DATASOURCE_USERNAME=root
+DATASOURCE_PASSWORD=yourpassword
 
 # SPRING PROFILE
 SPRING_PROFILES_ACTIVE=dev
