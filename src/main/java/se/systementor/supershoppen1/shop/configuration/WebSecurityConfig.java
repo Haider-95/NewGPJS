@@ -28,18 +28,8 @@ public class WebSecurityConfig  {
         auth
         .userDetailsService(userDetailsService)
         .passwordEncoder(passwordEncoder);
-        //   .inMemoryAuthentication()
-        //   .passwordEncoder(passwordEncoder)
-        //   .withUser("user@user.se")
-        //   .password(passwordEncoder.encode("stefan"))
-        //   .roles("USER")
-        //   .and()
-        //   .withUser("admin@user.se")
-        //   .password(passwordEncoder.encode("stefan"))
-        //   .roles("ADMIN");
-    }
-    
 
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -60,34 +50,11 @@ public class WebSecurityConfig  {
                 .logout(logout -> logout
                         .permitAll()
                 );
-
-
-
-
-
-//                .oauth2Login()
-//                .and()
-//
-//                    .formLogin()
-//                        .loginPage("/login")
-//                        .permitAll()
-//                        .defaultSuccessUrl("/")
-//                        .and()
-//                .logout()
-//					.permitAll()
-//                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-//                    .logoutSuccessUrl("/login");
-
-
-        return http.build(); 
+        return http.build();
     }
 
 
     public WebSecurityConfig() {
         super();
     }
-
-
-
-
 }
