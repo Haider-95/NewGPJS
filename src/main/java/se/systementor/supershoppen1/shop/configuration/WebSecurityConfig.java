@@ -21,55 +21,28 @@ public class WebSecurityConfig  {
     private ShopUserDetailsService userDetailsService;
 
 
-
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth,PasswordEncoder passwordEncoder) 
-      throws Exception {
+    public void configureGlobal(AuthenticationManagerBuilder auth, PasswordEncoder passwordEncoder)
+            throws Exception {
         auth
-        .userDetailsService(userDetailsService)
-        .passwordEncoder(passwordEncoder);
-        //   .inMemoryAuthentication()
-        //   .passwordEncoder(passwordEncoder)
-        //   .withUser("user@user.se")
-        //   .password(passwordEncoder.encode("stefan"))
-        //   .roles("USER")
-        //   .and()
-        //   .withUser("admin@user.se")
-        //   .password(passwordEncoder.encode("stefan"))
-        //   .roles("ADMIN");
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder);
     }
-    
 
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests()
-					.antMatchers("/", "/*", "/css/**", "/images/**", "/lib/**", "/scripts/**", "/static/**").permitAll()
-					.antMatchers("/admin/**").hasAnyRole("ADMIN")
-					.antMatchers("/user/**").hasAnyRole("USER")
-					.anyRequest().authenticated()
-                .and()
-                    .formLogin()
-                        .loginPage("/login")
-                        .permitAll()
-                        .defaultSuccessUrl("/")
-                        .and()
-                .logout()
-					.permitAll()
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                    .logoutSuccessUrl("/login");
-
-
-        return http.build(); 
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/", "/*", "/css/**", "/images/**", "/lib/**", "/scripts/**", "/static/**").permitAll()
+                        .requestMatchers("/admin/**").hasAnyRole("ADMIN")
+                        .requestMatchers("/user/**").hasAnyRole("USER")
+                        .anyRequest().authenticated()
+                );
+        return http.build();
     }
-
 
     public WebSecurityConfig() {
         super();
     }
-
-
-
-
 }
