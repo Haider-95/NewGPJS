@@ -22,6 +22,7 @@ public class WebSecurityConfig  {
     private ShopUserDetailsService userDetailsService;
 
 
+
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth, PasswordEncoder passwordEncoder)
             throws Exception {
