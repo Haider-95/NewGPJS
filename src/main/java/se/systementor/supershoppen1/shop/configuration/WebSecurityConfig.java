@@ -3,6 +3,7 @@ package se.systementor.supershoppen1.shop.configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -23,36 +24,27 @@ public class WebSecurityConfig  {
 
 
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth,PasswordEncoder passwordEncoder) 
-      throws Exception {
+    public void configureGlobal(AuthenticationManagerBuilder auth, PasswordEncoder passwordEncoder)
+            throws Exception {
         auth
-        .userDetailsService(userDetailsService)
-        .passwordEncoder(passwordEncoder);
-
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder);
     }
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-					.requestMatchers("/", "/*", "/css/**", "/images/**", "/lib/**", "/scripts/**", "/static/**").permitAll()
-					.requestMatchers("/admin/**").hasAnyRole("ADMIN")
-					.requestMatchers("/user/**").hasAnyRole("USER")
-					.anyRequest().authenticated()
+                        .requestMatchers("/", "/*", "/css/**", "/images/**", "/lib/**", "/scripts/**", "/static/**").permitAll()
+                        .requestMatchers("/admin/**").hasAnyRole("ADMIN")
+                        .requestMatchers("/user/**").hasAnyRole("USER")
+                        .anyRequest().authenticated()
                 )
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .permitAll()
-                )
-                .oauth2Login(oauth2 -> oauth2
-                      .loginPage("/login")
-                )
-                .logout(logout -> logout
-                        .permitAll()
-                );
+                .oauth2Login(Customizer.withDefaults())
+                .logout(logout -> logout.logoutSuccessUrl("/").permitAll());
         return http.build();
     }
-
 
     public WebSecurityConfig() {
         super();
