@@ -1,9 +1,7 @@
 # DATABASE CONFIG
-spring.config.import=optional:file:.env[.properties]
-DB_URL=jdbc:mysql://localhost:3306/(your database name)
-DB_USERNAME=root
-DB_PASSWORD=yourpassword
---glöm inte att ändra i application properties
+DATASOURCE_URL=dbc:mysql://localhost:3306/(your database name)
+DATASOURCE_USERNAME=root
+DATASOURCE_PASSWORD=yourpassword
 
 # SPRING PROFILE
 SPRING_PROFILES_ACTIVE=dev
