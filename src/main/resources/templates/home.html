@@ -8,7 +8,9 @@ th:replace="~{fragments/layouttemplate :: layout (~{::body})}">
 </head>
 <body>
 
-    
+<h2 th:if="${username != null}">
+    Welcome, <span th:text="${username}"></span>!
+</h2>
 
     <div class="section">
         <!-- container -->

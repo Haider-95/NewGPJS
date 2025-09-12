@@ -22,27 +22,51 @@ public class HomeController {
     public HomeController(ProductService productService, SubscriberService subscriberService) {
         this.productService = productService;
         this.subscriberService = subscriberService;
-    }    
+    }
 
-    @GetMapping(path="/")
-    String empty(Model model)
-    {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Object ud = auth.getPrincipal();
-        if(ud instanceof UserDetails)
-        {
-            String user = ((UserDetails)ud).getUsername();
-            var va2 = subscriberService.isSubscriber(user);
-            model.addAttribute("hideSubscription", va2);
+    @GetMapping(path = "/")
+    String empty(Model model) {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+
+        model.addAttribute("hideSubscription", false);
+
+        if (auth == null || !auth.isAuthenticated()) {
+            return "home";
         }
-        else{
-            model.addAttribute("hideSubscription", false);
 
+        Object principal = auth.getPrincipal();
+
+        if (principal instanceof UserDetails ud) {
+            String user = ud.getUsername();
+            model.addAttribute("username", user);
+
+            boolean isSub = subscriberService.isSubscriber(user);
+            model.addAttribute("hideSubscription", isSub);
+            return "home";
         }
-        
 
+        // 2) OAuth2 (GitHub/Discord)
+        if (principal instanceof org.springframework.security.oauth2.core.user.OAuth2User oauth) {
+            // Försök hämta ett vettigt namn i denna ordning:
+            String name      = oauth.getAttribute("name");        // GitHub full name
+            String login     = oauth.getAttribute("login");       // GitHub username
+            String global    = oauth.getAttribute("global_name"); // Discord display name
+            String username  = (name != null && !name.isBlank()) ? name
+                    : (global != null && !global.isBlank()) ? global
+                    : login != null ? login
+                    : oauth.getAttribute("username");     // Discord username (fallback)
+
+            if (username != null) {
+                model.addAttribute("username", username);
+            }
+            // Behåll din default hideSubscription=false för OAuth
+            return "home";
+        }
+
+        // 3) Okänd principal-typ → gäst
         return "home";
     }
+
 
     @GetMapping(path="/test2")
     List<Product> getAll(){
